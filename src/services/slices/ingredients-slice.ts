@@ -1,11 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
+import { TIngredient } from '@utils-types';
 
-type Ingredient = {
-  _id: string;
-  name: string;
-  // Добавь остальные поля по твоему API
-};
+type Ingredient = TIngredient;
 
 type IngredientsState = {
   items: Ingredient[];

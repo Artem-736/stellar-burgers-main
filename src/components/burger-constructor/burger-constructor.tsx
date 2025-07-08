@@ -1,45 +1,40 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 
-export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
+interface Props {
+  ingredients: TIngredient[];
+}
 
-  const orderRequest = false;
+export const BurgerConstructor: FC<Props> = ({ ingredients }) => {
+  const bun = ingredients.find((item) => item.type === 'bun');
 
-  const orderModalData = null;
+  const otherIngredients = ingredients.filter((item) => item.type !== 'bun');
+
+  const price = useMemo(() => {
+    const bunPrice = bun ? bun.price * 2 : 0;
+    const ingredientsPrice = otherIngredients.reduce(
+      (sum, item) => sum + item.price,
+      0
+    );
+    return bunPrice + ingredientsPrice;
+  }, [bun, otherIngredients]);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!bun) {
+      alert('Выберите булку для заказа');
+      return;
+    }
   };
-  const closeOrderModal = () => {};
-
-  const price = useMemo(
-    () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
-  );
-
-  return null;
 
   return (
     <BurgerConstructorUI
       price={price}
-      orderRequest={orderRequest}
-      constructorItems={constructorItems}
-      orderModalData={orderModalData}
+      orderRequest={false}
+      constructorItems={{ bun: bun ?? null, ingredients: otherIngredients }}
+      orderModalData={null}
       onOrderClick={onOrderClick}
-      closeOrderModal={closeOrderModal}
+      closeOrderModal={() => {}}
     />
   );
 };

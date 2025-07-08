@@ -4,6 +4,7 @@ import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
+import { ConstructorPageUI } from '../../components/ui/pages/constructor-page/constructor-page';
 import { Preloader } from '../../components/ui';
 import { useEffect, FC } from 'react';
 import { fetchIngredients } from '../../services/slices/ingredients-slice';
@@ -23,14 +24,11 @@ export const ConstructorPage: FC = () => {
 
   return (
     <main className={styles.containerMain}>
-      <h1
-        className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}
-      >
-        Соберите бургер
-      </h1>
       <div className={`${styles.main} pl-5 pr-5`}>
-        <BurgerIngredients />
-        <BurgerConstructor />
+        <ConstructorPageUI
+          isIngredientsLoading={isLoading}
+          ingredients={items}
+        />
       </div>
     </main>
   );

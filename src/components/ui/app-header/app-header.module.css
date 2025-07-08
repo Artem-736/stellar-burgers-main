@@ -35,3 +35,10 @@
   align-items: center;
   margin: 0 auto;
 }
+
+.menu_part_left > *,
+.link_position_last > * {
+  display: flex;
+  align-items: center;
+  height: 56px;
+}
