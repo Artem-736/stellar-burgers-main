@@ -7,6 +7,7 @@ import {
 } from 'react-redux';
 
 import { rootReducer } from './root-reducer';
+import orderReducer from './slices/order-slice';
 
 const store = configureStore({
   reducer: rootReducer,

@@ -22,7 +22,7 @@ export const ConstructorPageUI: FC<ConstructorPageUIProps> = ({
         </h1>
         <div className={`${styles.main} pl-5 pr-5`}>
           <BurgerIngredients />
-          <BurgerConstructor ingredients={ingredients} />
+          <BurgerConstructor />
         </div>
       </main>
     )}

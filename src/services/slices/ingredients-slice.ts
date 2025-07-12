@@ -17,15 +17,11 @@ const initialState: IngredientsState = {
 };
 
 // Thunk — асинхронный экшен
-export const fetchIngredients = createAsyncThunk(
+export const fetchIngredients = createAsyncThunk<TIngredient[]>(
   'ingredients/fetchIngredients',
-  async (_, thunkAPI) => {
-    try {
-      const response = await getIngredientsApi();
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error);
-    }
+  async () => {
+    const response = await getIngredientsApi();
+    return response;
   }
 );
 
