@@ -9,6 +9,8 @@ import {
 
 export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
   ({ ingredient, index, totalItems }) => {
+    const dispatch = useDispatch();
+
     const handleMoveUp = () => {
       if (index > 0) {
         dispatch(reorderIngredients({ from: index, to: index - 1 }));
@@ -20,8 +22,6 @@ export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
         dispatch(reorderIngredients({ from: index, to: index + 1 }));
       }
     };
-
-    const dispatch = useDispatch();
 
     const handleClose = () => {
       dispatch(removeIngredient(ingredient.id));

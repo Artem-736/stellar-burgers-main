@@ -20,6 +20,9 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/ingredients-slice';
 
 import '../../index.css';
 import styles from './app.module.css';
@@ -31,9 +34,15 @@ const App = () => (
 );
 
 const AppContent = () => {
+  const dispatch = useDispatch();
   const location = useLocation();
   const background = location.state?.background;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
+  }, [dispatch]);
+
   const handleCloseModal = () => {
     navigate(-1);
   };
@@ -70,7 +79,7 @@ const AppContent = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Информация о заказе' onClose={handleCloseModal}>
+              <Modal title='Детали ингредиента' onClose={handleCloseModal}>
                 <IngredientDetails />
               </Modal>
             }
@@ -78,7 +87,7 @@ const AppContent = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация о заказе' onClose={handleCloseModal}>
+              <Modal title='Детали заказа' onClose={handleCloseModal}>
                 <OrderInfo />
               </Modal>
             }
@@ -86,7 +95,7 @@ const AppContent = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Информация о заказе' onClose={handleCloseModal}>
+              <Modal title='Детали заказа' onClose={handleCloseModal}>
                 <OrderInfo />
               </Modal>
             }

@@ -47,11 +47,10 @@ export const BurgerIngredients: FC = () => {
   const dispatch = useDispatch();
 
   const onIngredientClick = (ingredient: TIngredient) => {
-    console.log('Ingredient clicked:', ingredient);
     if (ingredient.type === 'bun') {
-      dispatch(addBun(ingredient));
+      dispatch(addBun({ ...ingredient }));
     } else {
-      dispatch(addIngredient(ingredient));
+      dispatch(addIngredient({ ...ingredient }));
     }
   };
 

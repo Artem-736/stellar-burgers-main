@@ -8,3 +8,5 @@ export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   constructor: constructorReducer
 });
+
+export type RootState = ReturnType<typeof rootReducer>;

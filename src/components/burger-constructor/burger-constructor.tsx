@@ -1,22 +1,25 @@
 import { FC, useMemo } from 'react';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector } from '../../services/store';
-import { TConstructorIngredient } from '@utils-types';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const BurgerConstructor: FC = () => {
-  const { bun, ingredients } = useSelector((state) => state.constructor);
+  const { bun, ingredients = [] } = useSelector((state) => state.constructor);
 
-  const otherIngredients: TConstructorIngredient[] = Array.isArray(ingredients)
+  const otherIngredients: TConstructorIngredient[] = ingredients
     ? ingredients
-        .filter((item) => item.type !== 'bun')
-        .map((item) => ({ ...item, id: uuidv4() }))
+        .filter((item: TIngredient) => item.type !== 'bun')
+        .map((item: TIngredient) => ({ ...item, id: uuidv4() }))
     : [];
 
   const price = useMemo(() => {
     const bunPrice = bun ? bun.price * 2 : 0;
     const ingredientsPrice = Array.isArray(ingredients)
-      ? ingredients.reduce((sum, item) => sum + item.price, 0)
+      ? ingredients.reduce(
+          (sum: number, item: TIngredient) => sum + item.price,
+          0
+        )
       : 0;
     return bunPrice + ingredientsPrice;
   }, [bun, ingredients]);
