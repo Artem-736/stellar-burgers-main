@@ -1,8 +1,10 @@
-import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useSelector } from '../../services/store';
+import { useDispatch, useSelector } from '../../services/store';
+import { setUser } from '../../services/slices/auth-slice';
+import { ProfileUI } from '@ui-pages';
 
 export const Profile: FC = () => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const [formValue, setFormValue] = useState({
@@ -10,6 +12,9 @@ export const Profile: FC = () => {
     email: '',
     password: ''
   });
+
+  const [errorText, setErrorText] = useState('');
+  const [successText, setSuccessText] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -26,9 +31,49 @@ export const Profile: FC = () => {
     formValue.email !== user?.email ||
     !!formValue.password;
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log('Submit:', formValue);
+    setErrorText('');
+    setSuccessText('');
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      setErrorText('Токен не найден. Войдите заново.');
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        'https://norma.nomoreparties.space/api/auth/user',
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token
+          },
+          body: JSON.stringify({
+            name: formValue.name,
+            email: formValue.email,
+            password: formValue.password
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        dispatch(setUser(data.user));
+        setSuccessText('Данные успешно обновлены');
+        setFormValue((prev) => ({
+          ...prev,
+          password: ''
+        }));
+      } else {
+        setErrorText(data.message || 'Ошибка при обновлении');
+      }
+    } catch (err) {
+      setErrorText('Ошибка сети. Попробуйте позже.');
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -40,6 +85,8 @@ export const Profile: FC = () => {
         password: ''
       });
     }
+    setErrorText('');
+    setSuccessText('');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +103,8 @@ export const Profile: FC = () => {
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
       handleInputChange={handleInputChange}
+      errorText={errorText}
+      successText={successText}
     />
   );
 };
