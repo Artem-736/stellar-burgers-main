@@ -1,15 +1,20 @@
 import { FC, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useSelector } from '../../services/store';
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = useSelector((state) => state.order.currentOrder);
+  const { number } = useParams<{ number: string }>();
+  const orders = useSelector((state) => state.feed.orders || []);
   const ingredients = useSelector((state) => state.ingredients.items);
 
-  /* Готовим данные для отображения */
+  const orderData = useMemo(() => {
+    if (!number) return null;
+    return orders.find((order) => order.number === Number(number)) || null;
+  }, [number, orders]);
+
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) return null;
 
@@ -32,7 +37,6 @@ export const OrderInfo: FC = () => {
         } else {
           acc[item].count++;
         }
-
         return acc;
       },
       {} as TIngredientsWithCount
