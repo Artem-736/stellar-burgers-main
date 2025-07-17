@@ -13,7 +13,11 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [
           'constructor/addIngredient',
-          'constructor/reorderIngredients'
+          'constructor/reorderIngredients',
+          'ingredients/fetchIngredients/pending',
+          'ingredients/fetchIngredients/fulfilled',
+          'auth/setUser',
+          'order/setOrderHistory'
         ],
         ignoredPaths: ['constructor.ingredients']
       }

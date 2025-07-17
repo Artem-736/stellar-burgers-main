@@ -3,12 +3,14 @@ import { TOrder } from '@utils-types';
 
 type OrderState = {
   currentOrder: TOrder | null;
+  orderHistory: TOrder[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 };
 
 const initialState: OrderState = {
   currentOrder: null,
+  orderHistory: [],
   status: 'idle',
   error: null
 };
@@ -26,7 +28,7 @@ export const sendOrder = createAsyncThunk<
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: token ? `Bearer ${token}` : ''
+          Authorization: token ? token : ''
         },
         body: JSON.stringify({ ingredients: ingredientIds })
       }
@@ -52,6 +54,9 @@ const orderSlice = createSlice({
     },
     clearOrder(state) {
       state.currentOrder = null;
+    },
+    setOrderHistory(state, action: PayloadAction<TOrder[]>) {
+      state.orderHistory = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -71,5 +76,32 @@ const orderSlice = createSlice({
   }
 });
 
-export const { setCurrentOrder, clearOrder } = orderSlice.actions;
+export const fetchOrderHistory = createAsyncThunk<
+  TOrder[],
+  void,
+  { rejectValue: string }
+>('order/fetchOrderHistory', async (_, thunkAPI) => {
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    return thunkAPI.rejectWithValue('Токен не найден');
+  }
+  try {
+    const res = await fetch(
+      'https://norma.nomoreparties.space/api/orders/all',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    if (!res.ok) throw new Error('Ошибка при загрузке заказов');
+    const data = await res.json();
+    return data.orders as TOrder[];
+  } catch {
+    return thunkAPI.rejectWithValue('Ошибка загрузки истории заказов');
+  }
+});
+
+export const { setCurrentOrder, clearOrder, setOrderHistory } =
+  orderSlice.actions;
 export default orderSlice.reducer;

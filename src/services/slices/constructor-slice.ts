@@ -17,46 +17,55 @@ const constructorSlice = createSlice({
   initialState,
   reducers: {
     addBun(state, action: PayloadAction<TIngredient>) {
-      state.bun = action.payload;
-      return state;
+      return {
+        ...state,
+        bun: action.payload
+      };
     },
     addIngredient(state, action: PayloadAction<TIngredient>) {
-      if (!Array.isArray(state.ingredients)) {
-        state.ingredients = [];
-      }
-
       const ingredientWithId: TConstructorIngredient = {
         ...action.payload,
-        id: uuidv4()
+        uniqueId: uuidv4()
       };
-      state.ingredients.push(ingredientWithId);
-      return state;
+      return {
+        ...state,
+        ingredients: [...(state.ingredients ?? []), ingredientWithId]
+      };
     },
     removeIngredient(state, action: PayloadAction<string>) {
-      state.ingredients = state.ingredients.filter(
-        (ingredient) => ingredient.id !== action.payload
-      );
-      return state;
+      return {
+        ...state,
+        ingredients: state.ingredients.filter(
+          (ingredient) => ingredient.uniqueId !== action.payload
+        )
+      };
     },
-    clearConstructor(state) {
-      state.bun = null;
-      state.ingredients = [];
-      return state;
+    clearConstructor() {
+      return {
+        bun: null,
+        ingredients: []
+      };
     },
     reorderIngredients(
       state,
       action: PayloadAction<{ from: number; to: number }>
     ) {
       const { from, to } = action.payload;
-      const items = state.ingredients || [];
-      if (from < 0 || to < 0 || from >= items.length || to >= items.length) {
+      if (
+        from < 0 ||
+        to < 0 ||
+        from >= state.ingredients.length ||
+        to >= state.ingredients.length
+      ) {
         return state;
       }
-      const updated = [...items];
+      const updated = [...state.ingredients];
       const [movedItem] = updated.splice(from, 1);
       updated.splice(to, 0, movedItem);
-      state.ingredients = updated;
-      return state;
+      return {
+        ...state,
+        ingredients: updated
+      };
     }
   }
 });
