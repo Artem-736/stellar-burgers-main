@@ -23,6 +23,8 @@ import {
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { fetchIngredients } from '../../services/slices/ingredients-slice';
+import { ProtectedRoute } from '../protected-route/protected-route';
+import { setUser } from '../../services/slices/auth-slice';
 
 import '../../index.css';
 import styles from './app.module.css';
@@ -41,6 +43,32 @@ const AppContent = () => {
 
   useEffect(() => {
     dispatch(fetchIngredients());
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          'https://norma.nomoreparties.space/api/auth/user',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: token
+            }
+          }
+        );
+        const data = await res.json();
+        if (data.success) {
+          dispatch(setUser(data.user));
+        }
+      } catch (err) {
+        console.error('Ошибка при получении пользователя', err);
+      }
+    };
+
+    fetchUser();
   }, [dispatch]);
 
   const handleCloseModal = () => {
@@ -55,13 +83,28 @@ const AppContent = () => {
         <Route path='/feed' element={<Feed />} />
 
         {/* Страницы авторизации */}
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route
+          path='/login'
+          element={<ProtectedRoute onlyUnAuth component={<Login />} />}
+        />
+        <Route
+          path='/register'
+          element={<ProtectedRoute onlyUnAuth component={<Register />} />}
+        />
+        <Route
+          path='/forgot-password'
+          element={<ProtectedRoute onlyUnAuth component={<ForgotPassword />} />}
+        />
+        <Route
+          path='/reset-password'
+          element={<ProtectedRoute onlyUnAuth component={<ResetPassword />} />}
+        />
 
         {/* Личный кабинет */}
-        <Route path='/profile' element={<Profile />} />
+        <Route
+          path='/profile'
+          element={<ProtectedRoute component={<Profile />} />}
+        />
         <Route path='/profile/orders' element={<ProfileOrders />} />
 
         {/* Страница 404 */}
