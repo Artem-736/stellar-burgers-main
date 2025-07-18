@@ -1,17 +1,17 @@
-import { RefObject } from 'react';
+import React from 'react';
 import { TIngredient, TTabMode } from '@utils-types';
 
-export type BurgerIngredientsUIProps = {
+export interface BurgerIngredientsUIProps {
   currentTab: TTabMode;
-  buns: TIngredient[];
-  mains: TIngredient[];
-  sauces: TIngredient[];
-  titleBunRef: RefObject<HTMLHeadingElement>;
-  titleMainRef: RefObject<HTMLHeadingElement>;
-  titleSaucesRef: RefObject<HTMLHeadingElement>;
-  bunsRef: (node?: Element | null | undefined) => void;
-  mainsRef: (node?: Element | null | undefined) => void;
-  saucesRef: (node?: Element | null | undefined) => void;
-  onTabClick: (val: string) => void;
+  buns: (TIngredient & { count: number })[];
+  mains: (TIngredient & { count: number })[];
+  sauces: (TIngredient & { count: number })[];
+  titleBunRef: React.RefObject<HTMLHeadingElement>;
+  titleMainRef: React.RefObject<HTMLHeadingElement>;
+  titleSaucesRef: React.RefObject<HTMLHeadingElement>;
+  bunsSectionRef: React.Ref<HTMLUListElement>;
+  mainsSectionRef: React.Ref<HTMLUListElement>;
+  saucesSectionRef: React.Ref<HTMLUListElement>;
+  onTabClick: (tab: string) => void;
   onIngredientClick: (ingredient: TIngredient) => void;
-};
+}

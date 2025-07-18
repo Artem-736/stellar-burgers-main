@@ -31,7 +31,6 @@ export const IngredientsCategory = forwardRef<
       title={title}
       titleRef={titleRef}
       ingredients={ingredients}
-      ingredientsCounters={ingredientsCounters}
       onIngredientClick={onIngredientClick}
       ref={ref}
     />

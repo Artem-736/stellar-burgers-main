@@ -11,12 +11,34 @@ import { addBun, addIngredient } from '../../services/slices/constructor-slice';
 
 export const BurgerIngredients: FC = () => {
   const { items } = useSelector((state) => state.ingredients);
+  const { bun, ingredients = [] } = useSelector((state) => state.constructor);
 
   const buns = (items as TIngredient[]).filter((item) => item.type === 'bun');
   const mains = (items as TIngredient[]).filter((item) => item.type === 'main');
   const sauces = (items as TIngredient[]).filter(
     (item) => item.type === 'sauce'
   );
+
+  const getCount = (id: string) => {
+    if (bun && bun._id === id) {
+      return 1;
+    }
+    if (!ingredients) return 0;
+    return ingredients.filter((item) => item._id === id).length;
+  };
+
+  const bunsWithCount = buns.map((bun) => ({
+    ...bun,
+    count: getCount(bun._id)
+  }));
+  const mainsWithCount = mains.map((main) => ({
+    ...main,
+    count: getCount(main._id)
+  }));
+  const saucesWithCount = sauces.map((sauce) => ({
+    ...sauce,
+    count: getCount(sauce._id)
+  }));
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
 
@@ -57,15 +79,15 @@ export const BurgerIngredients: FC = () => {
   return (
     <BurgerIngredientsUI
       currentTab={currentTab}
-      buns={buns}
-      mains={mains}
-      sauces={sauces}
+      buns={bunsWithCount}
+      mains={mainsWithCount}
+      sauces={saucesWithCount}
       titleBunRef={titleBunRef}
       titleMainRef={titleMainRef}
       titleSaucesRef={titleSaucesRef}
-      bunsRef={bunsRef}
-      mainsRef={mainsRef}
-      saucesRef={saucesRef}
+      bunsSectionRef={bunsRef as React.Ref<HTMLUListElement>}
+      mainsSectionRef={mainsRef as React.Ref<HTMLUListElement>}
+      saucesSectionRef={saucesRef as React.Ref<HTMLUListElement>}
       onTabClick={onTabClick}
       onIngredientClick={onIngredientClick}
     />
