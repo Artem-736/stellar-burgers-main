@@ -9,7 +9,9 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { bun, ingredients = [] } = useSelector((state) => state.constructor);
+  const { bun, ingredients = [] } = useSelector(
+    (state) => state.burgerConstructor
+  );
   const { currentOrder, status } = useSelector((state) => state.order);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 

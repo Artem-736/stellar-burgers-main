@@ -19,7 +19,7 @@ export const registerUser = createAsyncThunk(
       password,
       name
     }: { email: string; password: string; name: string },
-    { dispatch, rejectWithValue }
+    { rejectWithValue }
   ) => {
     try {
       const res = await fetch(
@@ -40,7 +40,6 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
 
-      dispatch(setUser(data.user));
       return data.user;
     } catch (error) {
       return rejectWithValue('Ошибка сети');
@@ -86,10 +85,15 @@ const authSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(logoutUser.fulfilled, (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-    });
+    builder
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+      });
   }
 });
 

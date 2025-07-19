@@ -81,39 +81,41 @@ describe('E2E проверка конструктора Stellar Burgers', () => 
           refreshToken: 'test-refresh-token',
           user: {
             email: 'example@example.gmail',
-            password: 'example'
+            name: 'Test User'
           }
         }
       }).as('loginRequest');
-      
-      cy.intercept('GET', '/api/auth/user', {
-        statusCode: 200,
-        body: {
-          success: true,
-          user: {
-            email: 'example@example.gmail',
-            password: 'example'
-          }
-        }
-      }).as('getUser');
 
       // 2. Выполняем авторизацию
       cy.visit('/login');
+      
+      // Ждём полной загрузки формы
+      cy.get('form').should('exist');
+      cy.get('[data-testid=email-input] input').should('be.visible');
+      cy.get('[data-testid=password-input] input').should('be.visible');
 
-      cy.get('[data-testid=email-input] input', { timeout: 10000 })
-        .should('exist')
-        .and('be.visible')
-        .type('example@example.gmail', { delay: 100 });
-        
+      // Вводим email с триггером событий
+      cy.get('[data-testid=email-input] input').as('emailInput');
+      cy.get('@emailInput').clear();
+      cy.get('@emailInput').type('example@example.gmail', { delay: 50, force: true });
+      cy.get('@emailInput').trigger('input');
+      cy.get('@emailInput').trigger('change');
+
+      // Вводим пароль с триггером событий
       cy.get('[data-testid=password-input] input')
-        .should('exist')
-        .and('be.visible')
-        .type('example', { delay: 100 });
+        .clear()
+        .type('example', { delay: 50 })
+        .trigger('input')
+        .trigger('change');
 
-      cy.get('[data-testid=login-button] button')
-        .should('exist')
-        .and('be.visible')
+      // Проверяем активность кнопки (с увеличенным таймаутом)
+      cy.get('[data-testid=login-button] button', { timeout: 10000 })
+        .should('not.be.disabled')
+        .and('contain', 'Войти')
         .click();
+
+      // Ждём завершения авторизации
+      cy.wait('@loginRequest');
 
       // 3. Возвращаемся на главную страницу
       cy.visit('/');
@@ -176,6 +178,62 @@ describe('E2E проверка конструктора Stellar Burgers', () => 
       cy.get('[data-testid=order-modal]', { timeout: 10000 })
         .should('be.visible')
         .and('contain', orderMock.order.number);
+    });
+  });
+});
+
+context('Тестирование страницы ингредиента', () => {
+  it('Отображаются корректные данные ингредиента на странице деталей', () => {
+    // 1. Регистрируем перехват запроса ингредиентов
+    cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients' }).as('getIngredients');
+    
+    // 2. Переходим на главную страницу
+    cy.visit('/');
+    
+    // 3. Ждём загрузки ингредиентов
+    cy.wait('@getIngredients');
+    
+    // 4. Получаем данные первого ингредиента из фикстуры
+    cy.fixture('ingredients').then((ingredients) => {
+      const testIngredient = ingredients.data[0];
+      
+      // 5. Находим и кликаем на ингредиент
+      cy.get(`[data-testid="ingredient-${testIngredient._id}"]`)
+        .should('be.visible')
+        .click();
+      
+      // 6. Проверяем URL новой страницы
+      cy.url().should('include', `/ingredients/${testIngredient._id}`);
+      
+      // 7. Проверяем содержимое страницы
+      cy.get('[data-testid="ingredient-details-page"]').should('exist');
+      
+      // Проверяем название
+      cy.get('[data-testid="name"]')
+        .should('have.text', testIngredient.name);
+      
+      // Проверяем калории
+      cy.contains('Калории, ккал')
+        .next()
+        .should('have.text', testIngredient.calories.toString());
+      
+      // Проверяем белки
+      cy.contains('Белки, г')
+        .next()
+        .should('have.text', testIngredient.proteins.toString());
+      
+      // Проверяем жиры
+      cy.contains('Жиры, г')
+        .next()
+        .should('have.text', testIngredient.fat.toString());
+      
+      // Проверяем углеводы
+      cy.contains('Углеводы, г')
+        .next()
+        .should('have.text', testIngredient.carbohydrates.toString());
+      
+      // 8. Возвращаемся назад
+      cy.go('back');
     });
   });
 });
