@@ -22,7 +22,7 @@ export const ConstructorPage: FC = () => {
   if (hasError) return <p>Ошибка загрузки ингредиентов</p>;
 
   return (
-    <main className={styles.containerMain}>
+    <main className={styles.containerMain} data-testid='constructor-page'>
       <div className={`${styles.main} pl-5 pr-5`}>
         <ConstructorPageUI
           isIngredientsLoading={isLoading}

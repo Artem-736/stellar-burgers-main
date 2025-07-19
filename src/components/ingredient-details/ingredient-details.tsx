@@ -14,5 +14,10 @@ export const IngredientDetails: FC = () => {
     return <Preloader />;
   }
 
-  return <IngredientDetailsUI ingredientData={ingredientData} />;
+  return (
+    <IngredientDetailsUI
+      ingredientData={ingredientData}
+      data-testid='ingredient-details'
+    />
+  );
 };

@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type OrderState = {
+export type OrderState = {
   currentOrder: TOrder | null;
   orderHistory: TOrder[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';

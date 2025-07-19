@@ -11,7 +11,9 @@ import { addBun, addIngredient } from '../../services/slices/constructor-slice';
 
 export const BurgerIngredients: FC = () => {
   const { items } = useSelector((state) => state.ingredients);
-  const { bun, ingredients = [] } = useSelector((state) => state.constructor);
+  const { bun, ingredients = [] } = useSelector(
+    (state) => state.burgerConstructor
+  );
 
   const buns = (items as TIngredient[]).filter((item) => item.type === 'bun');
   const mains = (items as TIngredient[]).filter((item) => item.type === 'main');
@@ -90,6 +92,7 @@ export const BurgerIngredients: FC = () => {
       saucesSectionRef={saucesRef as React.Ref<HTMLUListElement>}
       onTabClick={onTabClick}
       onIngredientClick={onIngredientClick}
+      data-testid='burger-ingredients'
     />
   );
 };

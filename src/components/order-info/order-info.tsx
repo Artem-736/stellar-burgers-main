@@ -60,5 +60,5 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  return <OrderInfoUI orderInfo={orderInfo} />;
+  return <OrderInfoUI orderInfo={orderInfo} data-testid='order-info' />;
 };
