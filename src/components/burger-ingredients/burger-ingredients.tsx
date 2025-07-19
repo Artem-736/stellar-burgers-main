@@ -90,6 +90,7 @@ export const BurgerIngredients: FC = () => {
       saucesSectionRef={saucesRef as React.Ref<HTMLUListElement>}
       onTabClick={onTabClick}
       onIngredientClick={onIngredientClick}
+      data-testid='burger-ingredients'
     />
   );
 };

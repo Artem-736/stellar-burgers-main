@@ -56,6 +56,7 @@ export const BurgerConstructor: FC = () => {
       orderModalData={hasOrder ? currentOrder : null}
       onOrderClick={onOrderClick}
       closeOrderModal={() => dispatch(clearOrder())}
+      data-testid='burger-constructor'
     />
   );
 };
