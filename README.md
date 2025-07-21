@@ -24,7 +24,7 @@
 ```bash
 cp .env.example .env
 ```
-# Запустите проект:
+### Запустите проект:
 ```bash
 npm install
 ```
