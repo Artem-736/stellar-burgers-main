@@ -1,7 +1,7 @@
 import { defineConfig } from "cypress";
 
 export default defineConfig({
-  screenshotsFolder: 'cypress/short-screens',
+  screenshotsFolder: 'cypress/screens',
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
