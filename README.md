@@ -30,22 +30,7 @@
 - История заказов
 - Детализация каждого заказа
 
----
-
-## Технологии
-
-- **React 18** (хуки, функциональные компоненты)
-- **TypeScript** (строгая типизация)
-- **Redux Toolkit** (глобальное состояние)
-- **React DnD** (drag-and-drop)
-- **React Router 6** (навигация)
-- **WebSocket** (лента заказов в реальном времени)
-- **JWT** (авторизация)
-- **CSS Modules** (стилизация)
-
-API: [Stellar Burgers API](https://norma.nomoreparties.space/api)
-
----
+Для корректной работы запросов к серверу необходимо добавить переменную BURGER_API_URL в окружение. Сама ссылка находится в файле `.env.example`.
 
 ## Настройка проекта
 
@@ -53,7 +38,6 @@ API: [Stellar Burgers API](https://norma.nomoreparties.space/api)
 ```bash
 cp .env.example .env
 ```
-
 ### Запустите проект:
 ```bash
 npm install
