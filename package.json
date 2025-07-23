@@ -2,6 +2,7 @@
   "name": "react-canonical",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://Artem-736.github.io/stellar-burgers-main",
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -70,6 +71,7 @@
     "eslint-plugin-storybook": "^0.6.15",
     "eslint-webpack-plugin": "^4.0.1",
     "fetch-mock": "^9.11.0",
+    "gh-pages": "^6.3.0",
     "html-webpack-plugin": "^5.6.0",
     "jest": "^29.7.0",
     "jest-css-modules-transform": "^4.4.2",
@@ -89,6 +91,10 @@
   },
   "scripts": {
     "start": "webpack serve --mode=development",
+    "clean": "rd /s /q dist || exit 0",
+    "predeploy": "npm run build",
+    "build": "webpack --mode production",
+    "deploy": "gh-pages -d dist",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",

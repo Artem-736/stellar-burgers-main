@@ -4,11 +4,11 @@ import { AnyAction } from '@reduxjs/toolkit';
 describe('rootReducer', () => {
   it('should return initial state for unknown action', () => {
     const unknownAction = { type: 'UNKNOWN_ACTION' };
-    
+
     const initialState = rootReducer(undefined, {} as AnyAction);
-    
+
     const newState = rootReducer(initialState, unknownAction);
-    
+
     expect(newState).toEqual(initialState);
   });
 
