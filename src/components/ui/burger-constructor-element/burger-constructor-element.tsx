@@ -21,7 +21,10 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
           isUpDisabled={index === 0}
           isDownDisabled={index === totalItems - 1}
         />
-        <div className={`${styles.element_fullwidth} ml-2`}>
+        <div
+          className={`${styles.element_fullwidth} ml-2`}
+          data-testid='constructor-ingredient-'
+        >
           <ConstructorElement
             text={ingredient.name}
             price={ingredient.price}

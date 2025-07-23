@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "types": ["node", "jest"],
+    "types": ["node", "jest", "cypress", "mocha", "jquery"],
     "baseUrl": ".",
     "paths": {
       "@pages": ["src/pages"],
@@ -28,5 +28,9 @@
       "@selectors": ["src/services/selectors"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "cypress", "fixtures",
+  "cypress/**/*.ts",
+  "cypress/**/*.tsx",
+  "cypress/**/*.js",
+  "cypress/**/*.jsx"]
 }

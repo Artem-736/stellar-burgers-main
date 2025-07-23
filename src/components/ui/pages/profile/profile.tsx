@@ -10,7 +10,8 @@ import { ProfileMenu } from '@components';
 export const ProfileUI: FC<ProfileUIProps> = ({
   formValue,
   isFormChanged,
-  updateUserError,
+  errorText,
+  successText,
   handleSubmit,
   handleCancel,
   handleInputChange
@@ -78,11 +79,18 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             </Button>
           </div>
         )}
-        {updateUserError && (
+
+        {errorText && (
           <p
             className={`${commonStyles.error} pt-5 text text_type_main-default`}
           >
-            {updateUserError}
+            {errorText}
+          </p>
+        )}
+
+        {successText && (
+          <p className='pt-5 text text_type_main-default text_color_success'>
+            {successText}
           </p>
         )}
       </>
